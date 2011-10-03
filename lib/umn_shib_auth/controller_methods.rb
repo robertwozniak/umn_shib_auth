@@ -12,11 +12,12 @@ module UmnShibAuth
     end
  
     def shib_umn_session
-      if UmnShibAuth.using_stub_internet_id?
-        UmnShibAuth.session_stub
+      if ENV['eppn'].blank?
+        nil
       else
-        # TODO: the implementation.
+        @shib_umn_session = UmnShibAuth::Session.new(:eppn => ENV['eppn'])
       end
+      @shib_umn_session
     end
 
     ###############
