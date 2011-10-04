@@ -43,16 +43,17 @@ module UmnShibAuth
       "https://#{request.host}/Shibboleth.sso/Logout?return=#{encoded_redirect_url}"
     end
     
-    # Since we are expecting the web server to be propogating the logged in user
-    # this simply raises an exception
+    # Since we are expecting the web server to be propogating the logged in user variable
+    # this simply tells the user that there was an error.
+    #
     def shib_umn_auth_required
       return true if UmnShibAuth.using_stub_internet_id?
       if shib_umn_session.nil?
         render :text => "Sorry, an unexpected error has occurred (Shibboleth authentication credentials are not available).
-                         Please contact the administer of this page if this error persists." and return false
+                         Please contact the administer of this page if this error persists.", :status => 403 and return false
       else
         return true
-      end 
+      end
     end
   end
 end
