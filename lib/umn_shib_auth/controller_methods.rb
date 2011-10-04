@@ -10,12 +10,16 @@ module UmnShibAuth
         "
       end
     end
- 
+
     def shib_umn_session
-      if request.env['eppn'].blank?
-        nil
+      if UmnShibAuth.using_stub_internet_id?
+        @shib_umn_session ||= UmnShibAuth::Session.new(:eppn => UmnShibAuth.stub_internet_id)
       else
-        @shib_umn_session = UmnShibAuth::Session.new(:eppn => request.env['eppn'])
+        if request.env['eppn'].blank?
+          @shib_umn_session = nil
+        else
+          @shib_umn_session ||= UmnShibAuth::Session.new(:eppn => request.env['eppn'])
+        end
       end
       @shib_umn_session
     end
@@ -39,10 +43,16 @@ module UmnShibAuth
       "https://#{request.host}/Shibboleth.sso/Logout?return=#{encoded_redirect_url}"
     end
     
-    # BEFORE FILTER
+    # Since we are expecting the web server to be propogating the logged in user
+    # this simply raises an exception
     def shib_umn_auth_required
-      return true if UmnShibAuth.using_stub_x500?
-      # TODO: implementation
+      return true if UmnShibAuth.using_stub_internet_id?
+      if shib_umn_session.nil?
+        render :text => "Sorry, an unexpected error has occurred (Shibboleth authentication credentials are not available).
+                         Please contact the administer of this page if this error persists." and return false
+      else
+        return true
+      end 
     end
   end
 end
