@@ -24,18 +24,19 @@ module UmnShibAuth
     # URL HELPERS #
     ###############
     def shib_login_and_redirect_url(redirect_url=nil)
-      url='TODO'
-      return url
+      redirect_url ||= request.url
+      encoded_redirect_url = ERB::Util.url_encode(redirect_url)
+      "https://#{request.host}/Shibboleth.sso/Login?target=#{encoded_redirect_url}"
     end
  
     def shib_logout_url
-      url='TODO'
-      return url
+      "https://#{request.host}/Shibboleth.sso/Logout"
     end
 
     def shib_logout_and_redirect_url(redirect_url=nil)
-      url='TODO'
-      return url
+      redirect_url ||= request.url
+      encoded_redirect_url = ERB::Util.url_encode(redirect_url)
+      "https://#{request.host}/Shibboleth.sso/Logout?return=#{encoded_redirect_url}"
     end
     
     # BEFORE FILTER
