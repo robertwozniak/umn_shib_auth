@@ -12,10 +12,10 @@ module UmnShibAuth
     end
  
     def shib_umn_session
-      if ENV['eppn'].blank?
+      if request.env['eppn'].blank?
         nil
       else
-        @shib_umn_session = UmnShibAuth::Session.new(:eppn => ENV['eppn'])
+        @shib_umn_session = UmnShibAuth::Session.new(:eppn => request.env['eppn'])
       end
       @shib_umn_session
     end
