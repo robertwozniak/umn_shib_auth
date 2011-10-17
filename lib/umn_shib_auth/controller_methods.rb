@@ -2,7 +2,7 @@ module UmnShibAuth
   module ControllerMethods
     def self.included(controller)
       controller.class_eval do
-        helper_method :shib_login_and_redirect_url, :shib_logout_and_redirect_url, :shib_logout_url, :shib_umn_session
+        helper_method :shib_login_and_redirect_url, :shib_logout_and_redirect_url, :shib_logout_url, :shib_umn_session, :shib_debug_env_vars
       end
       if UmnShibAuth.using_stub_internet_id?
         puts "[umn_shib_auth] ENV['STUB_INTERNET_ID'] detected, shib_umn_session will be stubbed with internet_id=#{UmnShibAuth.stub_internet_id} for all requests.
@@ -58,5 +58,15 @@ module UmnShibAuth
         return true
       end
     end
+
+    def shib_debug_env_vars
+      s='<ul>'
+      request.env.each_pair do |key,val|
+        s += "<li><strong>#{key}:</strong> #{val}</li>"
+      end 
+      s+='</ul>'
+      s
+    end
+
   end
 end
