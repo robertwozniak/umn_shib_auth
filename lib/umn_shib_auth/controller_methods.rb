@@ -52,8 +52,7 @@ module UmnShibAuth
     def shib_umn_auth_required
       return true if UmnShibAuth.using_stub_internet_id?
       if shib_umn_session.nil?
-        render :text => "Sorry, an unexpected error has occurred (Shibboleth authentication credentials are not available).
-                         Please contact the administer of this page if this error persists.", :status => 403 and return false
+        redirect_to shib_login_and_redirect_url and return false
       else
         return true
       end
