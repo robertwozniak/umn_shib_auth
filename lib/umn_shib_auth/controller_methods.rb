@@ -38,6 +38,12 @@ module UmnShibAuth
     end
 
     def shib_logout_and_redirect_url(redirect_url=nil)
+      # CONTINUE HERE by redirecting to /logout.
+      # if require.env['Shib-Identity-Provider'].to_s.match(/idp-test.shib.umn.edu/)
+      #   ='https://www-test.umn.edu/logout'
+      # else
+      #   encoded_redirect_url='https://www-test.umn.edu/logout'
+      # end
       redirect_url ||= request.url
       encoded_redirect_url = ERB::Util.url_encode(redirect_url)
       "https://#{request.host}/Shibboleth.sso/Logout?return=#{encoded_redirect_url}"
